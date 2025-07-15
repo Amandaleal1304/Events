@@ -14,26 +14,4 @@ const sequelize = new Sequelize({
 
 });
 
-export async function syncer() {
-
-    try {
-
-        await sequelize.authenticate();
-
-        await sequelize.sync();
-
-    } catch (error) {
-
-        console.log('Erro ao acessar a base de dados.');
-
-        return false;
-
-    }
-
-    return true;
-
-}
-
-
-
 export default sequelize;

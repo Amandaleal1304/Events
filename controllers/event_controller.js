@@ -1,12 +1,26 @@
 import Event from "../models/event.js";
+import Organizer from "../models/organizer.js";
+import Category from "../models/category.js";
+import Participant from "../models/participant.js";
+
 
 async function createEvent(req, res) {
     try {
+    const participants = [];
+    for (let i = 0; i < req.body.participants.length; i++) {
+        const participant = await Participant.findByPk(req.body.participants[i]);
+        participants.push(participant);
+    }
+
+    
         const event = await Event.create({
             name: req.body.name,
             date: req.body.date,
-            local: req.body.local
+            local: req.body.local,
+            OrganizerId: req.body.OrganizerId,
+            CategoryId: req.body.CategoryId
         });
+        await event.addParticipants(participants);
         res.json(event);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao criar evento', details: error.message });
@@ -15,8 +29,8 @@ async function createEvent(req, res) {
 
 async function listEvents(req, res) {
     try {
-        const events = await Event.findAll();
-        res.json(events);
+        const list = await Event.findAll({include: [Organizer, Category, Participant]});
+        res.json(list);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao listar eventos', details: error.message });
     }
