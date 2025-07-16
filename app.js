@@ -22,7 +22,11 @@ const hbs = create({
     extname: '.handlebars',
     defaultLayout: 'main',
     layoutsDir: 'views/layouts/',
-    partialsDir: 'views/partials/'
+    partialsDir: 'views/partials/',
+    runtimeOptions: {
+        allowProtoMethodsByDefault: true,
+        allowProtoPropertiesByDefault: true
+    }
 });
 
 hbs.handlebars.registerHelper('eq', function(arg1, arg2) {
