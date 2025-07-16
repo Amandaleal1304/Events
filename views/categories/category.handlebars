@@ -1,0 +1,49 @@
+<h1>Categorias</h1>
+
+{{! Formulário para criar ou editar uma categoria }}
+<form action="/categories/{{#if action }}save{{else}}create{{/if}}" method="post">
+    <input type="hidden" name="id" value="{{category_editing.id}}">
+
+    <label for="name">Nome da Categoria</label><br>
+    <input type="text" id="name" name="name" value="{{category_editing.name}}" required><br><br>
+
+    <label for="description">Descrição</label><br>
+    <input type="text" id="description" name="description" value="{{category_editing.description}}" required><br><br>
+
+    <button type="submit">{{#if action }}Salvar Edição{{else}}Criar Categoria{{/if}}</button>
+</form>
+
+<hr>
+
+{{! Tabela para listar todas as categorias }}
+<table>
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+       
+        {{#each categories}}
+        <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.description}}</td>
+            <td style="display: flex; justify-content: space-evenly;">
+                {{! Formulário para o botão de editar }}
+                <form action="/categories/edit" method="post">
+                    <input type="hidden" name="id" value="{{this.id}}">
+                    <button type="submit">Editar</button>
+                </form>
+
+                {{! Formulário para o botão de deletar }}
+                <form action="/categories/delete" method="post">
+                    <input type="hidden" name="id" value="{{this.id}}">
+                    <button type="submit">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

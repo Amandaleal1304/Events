@@ -1,0 +1,54 @@
+<h1>Organizadores</h1>
+
+{{! Formulário para criar ou editar um organizador }}
+<form action="/organizers/{{#if action }}save{{else}}create{{/if}}" method="post">
+    <input type="hidden" name="id" value="{{organizer_editing.id}}">
+
+    <label for="name">Nome do Organizador</label><br>
+    <input type="text" id="name" name="name" value="{{organizer_editing.name}}" required><br><br>
+
+    <label for="contact">Contato (Telefone)</label><br>
+    <input type="text" id="contact" name="contact" value="{{organizer_editing.contact}}" required><br><br>
+
+    <label for="email">Email</label><br>
+    <input type="email" id="email" name="email" value="{{organizer_editing.email}}" required><br><br>
+
+    <button type="submit">{{#if action }}Salvar Edição{{else}}Criar Organizador{{/if}}</button>
+</form>
+
+<hr>
+
+{{! Tabela para listar todos os organizadores }}
+<table>
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Contato</th>
+            <th>Email</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{! Itera sobre a lista de organizadores passada pelo controller }}
+        {{#each organizers}}
+        <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.contact}}</td>
+            <td>{{this.email}}</td>
+            <td style="display: flex; justify-content: space-evenly;">
+                {{! Formulário para o botão de editar }}
+                <form action="/organizers/edit" method="post">
+                    <input type="hidden" name="id" value="{{this.id}}">
+                    <button type="submit">Editar</button>
+                </form>
+
+                {{! Formulário para o botão de deletar }}
+                <form action="/organizers/delete" method="post">
+                    <input type="hidden" name="id" value="{{this.id}}">
+                    <button type="submit">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

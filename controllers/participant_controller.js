@@ -1,61 +1,62 @@
 import Participant from "../models/participant.js";
-import Event from "../models/event.js";
+import Event from "../models/event.js"; 
 
 async function createParticipant(req, res) {
     try {
-        const participant = await Participant.create({
+        await Participant.create({
             name: req.body.name,
             age: req.body.age,
             telephone: req.body.telephone
         });
-        res.status(201).json(participant);
+        res.render('alerts', { title: 'Participantes', body: 'Participante criado.' });
     } catch (error) {
         res.status(500).json({ message: "Erro ao criar participante.", error: error.message });
     }
 }
 
+
 async function listParticipants(req, res) {
     try {
         const list = await Participant.findAll({ include: Event });
-        res.json(list);
+        res.render('participants/participant', { participants: list, raw: true });
     } catch (error) {
         res.status(500).json({ message: "Erro ao listar participantes.", error: error.message });
     }
 }
 
+
 async function editParticipant(req, res) {
     try {
         const participant = await Participant.findOne({ where: { id: req.body.id } });
+        res.render('participants/participant', { action: 'edit', participant_editing: participant.dataValues });
+    } catch (error) {
+        res.status(500).json({ message: "Erro ao carregar dados para edição.", error: error.message });
+    }
+}
 
-        if (!participant) {
-            return res.status(404).json({ message: "Participante não encontrado." });
-        }
 
-        // Atualiza os campos
+async function saveParticipant(req, res) {
+    try {
+        const participant = await Participant.findOne({ where: { id: req.body.id } });
         participant.name = req.body.name;
         participant.age = req.body.age;
         participant.telephone = req.body.telephone;
-
         await participant.save();
-        res.json({ message: "Registro de participante alterado com sucesso." });
+        res.render('alerts', { title: 'Participantes', body: 'Participante editado.' });
     } catch (error) {
-        res.status(500).json({ message: "Erro ao editar participante.", error: error.message });
+        res.status(500).json({ message: "Erro ao salvar o participante.", error: error.message });
     }
 }
+
 
 async function deleteParticipant(req, res) {
     try {
         const participant = await Participant.findOne({ where: { id: req.body.id } });
-
-        if (!participant) {
-            return res.status(404).json({ message: "Participante não encontrado." });
-        }
-
         await participant.destroy();
-        res.json({ message: "Registro de participante removido com sucesso." });
+        res.render('alerts', { title: 'Participantes', body: 'Participante deletado.' });
     } catch (error) {
-        res.status(500).json({ message: "Erro ao remover participante.", error: error.message });
+        res.status(500).json({ message: "Erro ao deletar o participante.", error: error.message });
     }
 }
 
-export { createParticipant, listParticipants, editParticipant, deleteParticipant };
+export { createParticipant, listParticipants, editParticipant, saveParticipant, deleteParticipant };

@@ -1,0 +1,50 @@
+<h1>Eventos</h1>
+
+<form action="/events/{{#if action }}save{{else}}create{{/if}}" method="post">
+    <input type="hidden" name="id" value="{{event_editing.id}}">
+
+    <label for="name">Nome do Evento</label><br>
+    <input type="text" id="name" name="name" value="{{event_editing.name}}" required><br><br>
+
+    <label for="date">Data</label><br>
+    {{! Usando o input type="date" para melhor experiência do usuário }}
+    <input type="date" id="date" name="date" value="{{event_editing.date}}" required><br><br>
+
+    <label for="local">Local</label><br>
+    <input type="text" id="local" name="local" value="{{event_editing.local}}" required><br><br>
+
+    <button type="submit">{{#if action }}Salvar Edição{{else}}Criar Evento{{/if}}</button>
+</form>
+
+<hr>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Data</th>
+            <th>Local</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each events}}
+        <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.date}}</td>
+            <td>{{this.local}}</td>
+            <td style="display: flex; justify-content: space-evenly;">
+                <form action="/events/edit" method="post">
+                    <input type="hidden" name="id" value="{{this.id}}">
+                    <button type="submit">Edit</button>
+                </form>
+
+                <form action="/events/delete" method="post">
+                    <input type="hidden" name="id" value="{{this.id}}">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
