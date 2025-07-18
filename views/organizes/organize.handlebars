@@ -1,25 +1,36 @@
 <h1>Organizadores</h1>
 
-{{! Formulário para criar ou editar um organizador }}
-<form action="/organizers/{{#if action }}save{{else}}create{{/if}}" method="post">
+<div class="container">
+    <form action="/organizers/{{#if action }}save{{else}}create{{/if}}" method="post">
     <input type="hidden" name="id" value="{{organizer_editing.id}}">
 
-    <label for="name">Nome do Organizador</label><br>
-    <input type="text" id="name" name="name" value="{{organizer_editing.name}}" required><br><br>
+<div class="mb-3" >
+  <label for="name" class="form-label">Nome do Organizador</label>
+    <input type="text" class="form-control" id="name" name="name" value="{{organizer_editing.name}}" required>
+</div>
+  
 
-    <label for="contact">Contato (Telefone)</label><br>
-    <input type="text" id="contact" name="contact" value="{{organizer_editing.contact}}" required><br><br>
+<div class="mb-3" >   
+     <label for="contact" class="form-label">Contato (Telefone)</label>
+    <input type="text" class="form-control" id="contact" name="contact" value="{{organizer_editing.contact}}" required>
+    </div>
 
-    <label for="email">Email</label><br>
-    <input type="email" id="email" name="email" value="{{organizer_editing.email}}" required><br><br>
 
-    <button type="submit">{{#if action }}Salvar Edição{{else}}Criar Organizador{{/if}}</button>
+<div class="mb-3" > 
+      <label for="email" class="form-label">Email</label>
+    <input type="email" class="form-control" id="email" name="email" value="{{organizer_editing.email}}" required>
+    </div>
+ 
+
+    <button type="submit" class="btn btn-primary">{{#if action }}Salvar Edição{{else}}Criar Organizador{{/if}}</button>
 </form>
+</div>
+
 
 <hr>
 
-{{! Tabela para listar todos os organizadores }}
-<table>
+<div class="container">
+    <table class="table table-striped">
     <thead>
         <tr>
             <th>Nome</th>
@@ -35,20 +46,22 @@
             <td>{{this.name}}</td>
             <td>{{this.contact}}</td>
             <td>{{this.email}}</td>
-            <td style="display: flex; justify-content: space-evenly;">
+            <td class="d-flex justify-content-center gap-2">
                 {{! Formulário para o botão de editar }}
                 <form action="/organizers/edit" method="post">
                     <input type="hidden" name="id" value="{{this.id}}">
-                    <button type="submit">Editar</button>
+                    <button type="submit" class="btn btn-info text-white">Editar</button>
                 </form>
 
                 {{! Formulário para o botão de deletar }}
                 <form action="/organizers/delete" method="post">
                     <input type="hidden" name="id" value="{{this.id}}">
-                    <button type="submit">Excluir</button>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
                 </form>
             </td>
         </tr>
         {{/each}}
     </tbody>
 </table>
+</div>
+

@@ -1,54 +1,62 @@
 <h1>Participantes</h1>
 
-{{! Formulário para criar ou editar um participante }}
-<form action="/participants/{{#if action }}save{{else}}create{{/if}}" method="post">
-    <input type="hidden" name="id" value="{{participant_editing.id}}">
+<div class="container">
+    <form action="/participants/{{#if action }}save{{else}}create{{/if}}" method="post">
+        <input type="hidden" name="id" value="{{participant_editing.id}}">
 
-    <label for="name">Nome do Participante</label><br>
-    <input type="text" id="name" name="name" value="{{participant_editing.name}}" required><br><br>
+        <div class="mb-3">
+            <label class="form-label" for="name">Nome do Participante</label>
+            <input type="text" id="name" class="form-control" name="name" value="{{participant_editing.name}}" required>
+        </div>
 
-    <label for="age">Idade</label><br>
-    <input type="number" id="age" name="age" value="{{participant_editing.age}}" required><br><br>
 
-    <label for="telephone">Telefone</label><br>
-    <input type="text" id="telephone" name="telephone" value="{{participant_editing.telephone}}" required><br><br>
+        <div class="mb-3">
+            <label for="age" class="form-label">Idade</label>
+            <input type="number" id="age" class="form-control" name="age" value="{{participant_editing.age}}" required>
+        </div>
 
-    <button type="submit">{{#if action }}Salvar Edição{{else}}Criar Participante{{/if}}</button>
-</form>
+        <div class="mb-3">
+            <label for="telephone" class="form-label">Telefone</label>
+            <input type="text" id="telephone" class="form-control" name="telephone"
+                value="{{participant_editing.telephone}}" required>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">{{#if action }}Salvar Edição{{else}}Criar
+            Participante{{/if}}</button>
+    </form>
+</div>
+
 
 <hr>
-
-{{! Tabela para listar todos os participantes }}
-<table>
-    <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Idade</th>
-            <th>Telefone</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{! Itera sobre a lista de participantes passada pelo controller }}
-        {{#each participants}}
-        <tr>
-            <td>{{this.name}}</td>
-            <td>{{this.age}}</td>
-            <td>{{this.telephone}}</td>
-            <td style="display: flex; justify-content: space-evenly;">
-                {{! Formulário para o botão de editar }}
-                <form action="/participants/edit" method="post">
-                    <input type="hidden" name="id" value="{{this.id}}">
-                    <button type="submit">Editar</button>
-                </form>
-
-                {{! Formulário para o botão de deletar }}
-                <form action="/participants/delete" method="post">
-                    <input type="hidden" name="id" value="{{this.id}}">
-                    <button type="submit">Excluir</button>
-                </form>
-            </td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Idade</th>
+                <th>Telefone</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each participants}}
+            <tr>
+                <td>{{this.name}}</td>
+                <td>{{this.age}}</td>
+                <td>{{this.telephone}}</td>
+                <td class="d-flex justify-content-center gap-2">
+                    <form action="/participants/edit" method="post">
+                        <input type="hidden" name="id" value="{{this.id}}">
+                        <button type="submit" class="btn btn-info text-white">Editar</button>
+                    </form>
+                    <form action="/participants/delete" method="post">
+                        <input type="hidden" name="id" value="{{this.id}}">
+                        <button type="submit" class="btn btn-danger">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>

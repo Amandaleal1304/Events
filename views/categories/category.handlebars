@@ -1,49 +1,57 @@
 <h1>Categorias</h1>
+<div class="container">
+    <form action="/categories/{{#if action }}save{{else}}create{{/if}}" method="post">
+        <input type="hidden" name="id" value="{{category_editing.id}}">
 
-{{! Formulário para criar ou editar uma categoria }}
-<form action="/categories/{{#if action }}save{{else}}create{{/if}}" method="post">
-    <input type="hidden" name="id" value="{{category_editing.id}}">
+        <div class="mb-3">
+            <label for="name" class="form-label">Nome da Categoria</label>
+            <input type="text" id="name" class="form-control" name="name" value="{{category_editing.name}}" required>
+        </div>
 
-    <label for="name">Nome da Categoria</label><br>
-    <input type="text" id="name" name="name" value="{{category_editing.name}}" required><br><br>
+        <div class="mb-3">
+            <label for="description" class="form-label">Descrição</label>
+            <input type="text" id="description" class="form-control" name="description" value="{{category_editing.description}}" required>
+        </div>
 
-    <label for="description">Descrição</label><br>
-    <input type="text" id="description" name="description" value="{{category_editing.description}}" required><br><br>
 
-    <button type="submit">{{#if action }}Salvar Edição{{else}}Criar Categoria{{/if}}</button>
-</form>
+        <button class="btn btn-primary" type="submit">{{#if action }}Salvar Edição{{else}}Criar
+            Categoria{{/if}}</button>
+    </form>
+</div>
+
 
 <hr>
 
-{{! Tabela para listar todas as categorias }}
-<table>
-    <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Descrição</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-       
-        {{#each categories}}
-        <tr>
-            <td>{{this.name}}</td>
-            <td>{{this.description}}</td>
-            <td style="display: flex; justify-content: space-evenly;">
-                {{! Formulário para o botão de editar }}
-                <form action="/categories/edit" method="post">
-                    <input type="hidden" name="id" value="{{this.id}}">
-                    <button type="submit">Editar</button>
-                </form>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
 
-                {{! Formulário para o botão de deletar }}
-                <form action="/categories/delete" method="post">
-                    <input type="hidden" name="id" value="{{this.id}}">
-                    <button type="submit">Excluir</button>
-                </form>
-            </td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
+            {{#each categories}}
+            <tr>
+                <td>{{this.name}}</td>
+                <td>{{this.description}}</td>
+                <td class="d-flex justify-content-center gap-2">
+                    {{! Formulário para o botão de editar }}
+                    <form action="/categories/edit" method="post">
+                        <input type="hidden" name="id" value="{{this.id}}">
+                        <button type="submit" class="btn btn-info text-white">Editar</button>
+                    </form>
+
+                    {{! Formulário para o botão de deletar }}
+                    <form action="/categories/delete" method="post">
+                        <input type="hidden" name="id" value="{{this.id}}">
+                        <button type="submit" class="btn btn-danger">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
