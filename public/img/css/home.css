@@ -1,0 +1,48 @@
+/* 1. Fundo escuro para a página inteira */
+body.bg-custom-dark {
+    background-color: #12121c; /* Um azul bem escuro, quase preto */
+}
+
+/* 2. Estilo personalizado para os cards */
+.card-custom {
+    background-color: #1e1e2c; /* Um tom de cinza/azul escuro, um pouco mais claro que o fundo */
+    border: 1px solid #3d3d5e; /* Uma borda sutil no tom azulado */
+    border-radius: 0.75rem; /* Bordas um pouco mais arredondadas */
+    transition: all 0.3s ease; /* Transição suave para o efeito hover */
+}
+
+/* Efeito de "brilho" ao passar o mouse no card */
+.card-custom:hover {
+    border-color: #f9008e;
+    box-shadow: 0 0 15px rgba(249, 0, 142, 0.4);
+}
+
+/* 3. Estilo dos textos dentro do card */
+.card-custom .card-title {
+    color: #ffffff; /* Título em branco */
+    font-weight: bold;
+}
+
+.card-custom .card-text {
+    color: #b0b0d1; /* Data em um tom de cinza/lilás claro para diferenciar */
+}
+
+
+/* 4. Estilo do Botão Neon (a estrela do show!) */
+.btn-neon-pink {
+    background-color: #f9008e;  /* Cor principal: Rosa/Magenta Vibrante */
+    border-color: #f9008e;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 50px; /* Botão no formato de pílula */
+    transition: all 0.3s ease;
+    box-shadow: 0 0 8px rgba(249, 0, 142, 0.5); /* Sombra para dar o efeito de brilho */
+}
+
+.btn-neon-pink:hover {
+    background-color: #ff31a9;
+    border-color: #ff31a9;
+    color: #ffffff;
+    transform: translateY(-2px); /* Efeito de "levantar" o botão */
+    box-shadow: 0 0 20px rgba(249, 0, 142, 0.8); /* Aumenta o brilho no hover */
+}
