@@ -1,6 +1,4 @@
-<h1>Organizadores</h1>
-
-<div class="container">
+<div class="container mt-3">
     <form action="/organizers/{{#if action }}save{{else}}create{{/if}}" method="post">
     <input type="hidden" name="id" value="{{organizer_editing.id}}">
 
@@ -22,7 +20,7 @@
     </div>
  
 
-    <button type="submit" class="btn btn-primary">{{#if action }}Salvar Edição{{else}}Criar Organizador{{/if}}</button>
+    <button type="submit" class="btn btn-vermelho-custom">{{#if action }}Salvar Edição{{else}}Criar Organizador{{/if}}</button>
 </form>
 </div>
 

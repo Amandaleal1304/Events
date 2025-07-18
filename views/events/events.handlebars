@@ -1,6 +1,4 @@
-<h1>Eventos</h1>
-
-<div class="container">
+<div class="container mt-3">
     <form action="/events/{{#if event_editing}}save{{else}}create{{/if}}" method="post">
         <input type="hidden" name="id" value="{{event_editing.id}}">
 
@@ -61,7 +59,7 @@
         </div>
 
 
-        <button class="btn btn-primary" type="submit">{{#if event_editing}}Salvar Edição{{else}}Criar Evento{{/if}}</button>
+        <button class="btn btn-vermelho-custom" type="submit">{{#if event_editing}}Salvar Edição{{else}}Criar Evento{{/if}}</button>
     </form>
 </div>
 

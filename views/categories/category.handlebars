@@ -1,5 +1,4 @@
-<h1>Categorias</h1>
-<div class="container">
+<div class="container mt-3">
     <form action="/categories/{{#if action }}save{{else}}create{{/if}}" method="post">
         <input type="hidden" name="id" value="{{category_editing.id}}">
 
@@ -14,7 +13,7 @@
         </div>
 
 
-        <button class="btn btn-primary" type="submit">{{#if action }}Salvar Edição{{else}}Criar
+        <button class="btn btn-vermelho-custom" type="submit">{{#if action }}Salvar Edição{{else}}Criar
             Categoria{{/if}}</button>
     </form>
 </div>

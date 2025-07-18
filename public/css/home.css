@@ -1,0 +1,167 @@
+/*
+==================================================
+CSS Consolidado - Tema 'Neon Noturno' v.Final
+==================================================
+*/
+
+/* 1. ESTILOS GERAIS DA PÁGINA */
+body.bg-custom-dark {
+    background-color: #12121c; /* Azul bem escuro, quase preto */
+    color: #b0b0d1;            /* Tom de cinza/lilás claro para texto padrão */
+}
+
+/* 2. ESTILO DOS CARDS DE EVENTOS */
+.card-custom {
+    background-color: #1e1e2c;
+    border: 1px solid #3d3d5e;
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.card-custom:hover {
+    border-color: #f9008e; /* Borda Rosa ao passar o mouse */
+    box-shadow: 0 0 15px rgba(249, 0, 142, 0.4);
+}
+
+.card-custom .card-title {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* 3. ESTILO DO BOTÃO NEON ROSA */
+.btn-neon-rosa {
+    background-color: #ff284c;
+    border-color: #ff284c;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 8px rgba(249, 0, 142, 0.5);
+}
+
+.btn-neon-rosa:hover {
+    background-color: #ff284c;
+    border-color: #ff284c;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(249, 0, 142, 0.8);
+}
+
+/* 4. ESTILO DA BARRA DE INFORMAÇÕES VERMELHA (último pedido) */
+.fundo-vermelho-custom {
+    background-color: #ff284c;
+    color: #ffffff;
+}
+
+.link-destaque-branco,
+.link-destaque-branco i {
+    color: #ffffff;
+    font-weight: bold;
+    transition: opacity 0.3s ease;
+}
+
+.link-destaque-branco:hover {
+    color: #ffffff;
+    opacity: 0.8;
+}
+
+/* 5. ESTILO DO NOVO RODAPÉ (FOOTER) */
+.footer-custom {
+    background-color: #1e1e2c; /* Fundo igual ao dos cards */
+    border-top: 1px solid #3d3d5e; /* Linha sutil para separar */
+}
+
+.footer-logo {
+    font-weight: bold;
+    color: #ff4967; /* Logo com a cor Ciano Elétrico */
+    letter-spacing: 2px;
+}
+
+.footer-title {
+    color: #ff4967; /* Títulos das colunas também em Ciano */
+    text-transform: uppercase; /* Deixa o texto em maiúsculas */
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.footer-link {
+    color: #b0b0d1; /* Cor padrão para os links */
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.footer-link:hover {
+    color: #ffffff; /* Link fica branco ao passar o mouse */
+}
+
+.social-icon {
+    color: #ff4967; /* Ícones sociais em Ciano */
+    font-size: 1.5rem; /* Tamanho dos ícones */
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    color: #ff284c; /* Ícones ficam rosa no hover, para um toque especial */
+    transform: translateY(-3px);
+}
+
+/*
+==================================================
+7. ESTILO FINAL DOS LINKS E LOGO DA NAVBAR
+==================================================
+*/
+
+/* Cor de fundo da navbar (do passo anterior) */
+.navbar {
+    background-color: #1e1e2c;
+}
+
+/* 1. Estilo do Logo "Eventos" em vermelho */
+.navbar .navbar-brand {
+    color: #f10554; /* Seu tom de vermelho */
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+/* Efeito do logo ao passar o mouse */
+.navbar .navbar-brand:hover {
+    color: #ffffff; /* Fica branco no hover para consistência */
+}
+
+
+/* 2. Efeito dos outros links (Home, Eventos, etc.) */
+
+/* Cor padrão para os links, igual ao footer */
+.navbar .nav-link {
+    color: #b0b0d1;
+    transition: color 0.3s ease;
+}
+
+/* Cor ao passar o mouse ou focar, fica branco */
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+    color: #ffffff;
+}
+
+/* Destaque para o link da página ATIVA */
+.navbar .nav-link.active {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* Botão personalizado com o seu tom de vermelho */
+.btn-vermelho-custom {
+    background-color: #f10554;
+    border-color: #f10554;
+    color: #ffffff; /* Cor do texto em branco para bom contraste */
+    transition: background-color 0.2s ease-in-out; /* Efeito suave na transição de cor */
+}
+
+/* Efeito ao passar o mouse por cima (hover) */
+.btn-vermelho-custom:hover {
+    background-color: #d4044a; /* Um tom de vermelho um pouco mais escuro */
+    border-color: #d4044a;
+    color: #ffffff;
+}
