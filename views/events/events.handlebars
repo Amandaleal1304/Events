@@ -4,19 +4,16 @@
 
         <div class="mb-3">
             <label for="name" class="form-label">Nome do Evento</label>
-            <input type="text" id="name" class="form-control" name="name" value="{{event_editing.name}}"
-                required>
+            <input type="text" id="name" class="form-control" name="name" value="{{event_editing.name}}" required>
         </div>
 
         <div class="mb-3"><label for="date" class="form-label">Data</label><br>
-            <input type="date" id="date" class="form-control" name="date" value="{{event_editing.date}}"
-                required>
+            <input type="date" id="date" class="form-control" name="date" value="{{event_editing.date}}" required>
         </div>
 
         <div class="mb-3">
             <label for="city" class="form-label">Cidade</label><br>
-            <input type="text" id="city" class="form-control" name="city" value="{{event_editing.city}}"
-                required>
+            <input type="text" id="city" class="form-control" name="city" value="{{event_editing.city}}" required>
         </div>
 
         <div class="mb-3">
@@ -47,19 +44,18 @@
             </select>
         </div>
         <div class="mb-3">
-            {{!-- Checkboxes para Participantes --}}
             <label>Participantes</label>
+            {{#each all_participants}}
             <div class="form-check">
-                {{#each all_participants}}
                 <input type="checkbox" class="form-check-input" id="participant{{this.id}}" name="participants"
                     value="{{this.id}}" {{#if (contains ../event_editing.Participants this.id)}} checked {{/if}}>
                 <label class="form-check-label" for="participant{{this.id}}">{{this.name}}</label>
-                {{/each}}
             </div>
+            {{/each}}
         </div>
 
-
-        <button class="btn btn-vermelho-custom" type="submit">{{#if event_editing}}Salvar Edição{{else}}Criar Evento{{/if}}</button>
+        <button class="btn btn-vermelho-custom" type="submit">{{#if event_editing}}Salvar Edição{{else}}Criar
+            Evento{{/if}}</button>
     </form>
 </div>
 
