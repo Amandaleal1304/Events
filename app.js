@@ -2,7 +2,7 @@ import express from 'express';
 import session from 'express-session';
 import css from 'connect-session-sequelize';
 import { create } from 'express-handlebars';
-import event_router from   './routers/event_router.js';
+import event_router from './routers/event_router.js';
 import organizer_router from './routers/organizer_router.js';
 import category_router from './routers/category_router.js';
 import participant_router from './routers/participant_router.js';
@@ -29,15 +29,17 @@ const hbs = create({
     }
 });
 
-hbs.handlebars.registerHelper('eq', function(arg1, arg2) {
-    return (arg1 == arg2);
+// Helper para comparar se dois valores são iguais.
+hbs.handlebars.registerHelper('eq', (a, b) => {
+    return a == b;
 });
 
-hbs.handlebars.registerHelper('inc', function(arg1, arg2) {
-    if(typeof arg1 == 'undefined') {
-        return false;
+// CORREÇÃO: Renomeado o helper de 'inc' para 'contains' para corresponder à view.
+hbs.handlebars.registerHelper('contains', (array, item) => {
+    if (typeof array != 'undefined' && Array.isArray(array)) {
+        return array.indexOf(item) !== -1;
     }
-    return (arg1.indexOf(arg2) !== -1);
+    return false;
 });
 
 const SequelizeStore = css(session.Store);
@@ -55,17 +57,16 @@ app.use(session({
     store: sequelizeStore,
     cookie: {
         maxAge: 1 * 60 * 60 * 1000,
-        secure: false, // if using HTTPS
-        httpOnly: true // somente browsers
+        secure: false, 
+        httpOnly: true
     },
     saveUninitialized: false, 
     resave: false
 }));
 
 await sequelizeStore.sync();
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true })); // Adicionado extended: true por boa prática
 
-// app.use(express.json()); permitir a comunicacao em json
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 app.set('views', './views');
@@ -79,6 +80,8 @@ app.use('/organizers', checkLogged, organizer_router);
 app.use('/categories', checkLogged, category_router);
 app.use('/participants', checkLogged, participant_router);
 app.use('/users', user_router);
+
+app.use(express.static('public')); // Adicionado para servir arquivos estáticos como CSS/JS
 
 app.listen(80, () => {
     console.log('Escutando...');

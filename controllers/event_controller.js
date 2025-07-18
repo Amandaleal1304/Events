@@ -3,16 +3,8 @@ import Organizer from "../models/organizer.js";
 import Category from "../models/category.js";
 import Participant from "../models/participant.js";
 
-
 async function createEvent(req, res) {
     try {
-        const participants = [];
-        for (let i = 0; i < req.body.participants.length; i++) {
-            const participant = await Participant.findByPk(req.body.participants[i]);
-            participants.push(participant);
-        }
-
-
         const event = await Event.create({
             name: req.body.name,
             date: req.body.date,
@@ -20,78 +12,125 @@ async function createEvent(req, res) {
             OrganizerId: req.body.OrganizerId,
             CategoryId: req.body.CategoryId
         });
-        await event.addParticipants(participants);
-        res.render('alerts', { title: 'Events', body: 'Event created.' });
+
+        if (req.body.participants && req.body.participants.length > 0) {
+            await event.setParticipants(req.body.participants);
+        }
+
+        // ALTERAÇÃO: Redireciona para a lista de eventos.
+        res.redirect('/events');
+
     } catch (error) {
+        console.error("ERRO AO CRIAR EVENTO:", error); 
         res.status(500).json({ error: 'Erro ao criar evento', details: error.message });
     }
 }
 
+// Em event_controller.js
+
 async function listEvents(req, res) {
     try {
-        const list = await Event.findAll({ include: [Organizer, Category, Participant], raw: true });
-        res.render('events/events', { events: list,  });
+        // 1. Busca todos os eventos, incluindo seus relacionamentos (SEM raw:true).
+        const events = await Event.findAll({ 
+            include: [Organizer, Category, Participant]
+        });
+        
+        // 2. Processa a lista para converter em objetos JSON puros.
+        //    Isso preserva corretamente os relacionamentos aninhados.
+        const processedEvents = events.map(event => event.toJSON());
+
+        // 3. Busca as listas completas para preencher os formulários na view.
+        const organizersList = await Organizer.findAll({ raw: true });
+        const categoriesList = await Category.findAll({ raw: true });
+        const participantsList = await Participant.findAll({ raw: true });
+
+        // 4. Renderiza a view com os dados corretos.
+        res.render('events/events', { 
+            events: processedEvents, 
+            all_organizers: organizersList,
+            all_categories: categoriesList,
+            all_participants: participantsList
+        });
+
     } catch (error) {
-        res.status(500).json({ error: 'Erro ao listar eventos', details: error.message });
+        res.status(500).json({ error: 'Erro ao carregar a página de eventos', details: error.message });
     }
 }
 
 async function editEvent(req, res) {
     try {
-        const event = await Event.findOne({ where: { id: req.body.id } });
+        const event = await Event.findOne({ 
+            where: { id: req.body.id }, 
+            include: [Organizer, Category, Participant] 
+        });
+
         if (!event) {
-            return res.status(404).json({ message: 'Evento não encontrado.' });
+            // ALTERAÇÃO: Redireciona em caso de erro.
+            return res.redirect('/events');
         }
-        event.name = req.body.name;
-        event.date = req.body.date;
-        event.city = req.body.city;
-        await event.save();
-        res.render('events/events', { action: 'edit', event_editing: event.dataValues });
+
+        const event_editing = event.toJSON();
+        
+        if (event_editing.date) {
+            const dateObj = new Date(event_editing.date);
+            const year = dateObj.getFullYear();
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            event_editing.date = `${year}-${month}-${day}`;
+        }
+
+        const all_organizers = await Organizer.findAll({ raw: true });
+        const all_categories = await Category.findAll({ raw: true });
+        const all_participants = await Participant.findAll({ raw: true });
+
+        event_editing.Participants = event_editing.Participants.map(participant => participant.id);
+
+        res.render('events/events', {
+            action: 'edit',
+            event_editing: event_editing,
+            all_organizers: all_organizers,
+            all_categories: all_categories,
+            all_participants: all_participants
+        });
+
     } catch (error) {
-        res.status(500).json({ error: 'Erro ao editar evento', details: error.message });
+        res.status(500).json({ error: 'Erro ao carregar página de edição de evento', details: error.message });
     }
 }
-
 
 async function saveEvent(req, res) {
     try {
         const event = await Event.findOne({ where: { id: req.body.id } });
-        // Verifica se o evento realmente existe
-        if (!event) {
-            return res.status(404).render('alerts', { title: 'Erro', body: 'Evento não encontrado.' });
-        }
+
         event.name = req.body.name;
         event.date = req.body.date;
         event.city = req.body.city;
-        // event.DirectorId = req.body.DirectorId;
-
-        // 3. Atualiza os relacionamentos "um-para-muitos".
         event.OrganizerId = req.body.OrganizerId;
         event.CategoryId = req.body.CategoryId;
+        
+        await event.save();
 
-        // 4. Atualiza o relacionamento "muitos-para-muitos" com Participantes.
-        if (req.body.participants && Array.isArray(req.body.participants)) {
+        if (req.body.participants) {
             await event.setParticipants(req.body.participants);
         } else {
-            // Se nenhuma lista for enviada, remove todos os participantes associados.
             await event.setParticipants([]);
         }
-        await event.save();
-        res.render('alerts', { title: 'Events', body: 'Event saved.' });
+
+        // ALTERAÇÃO: Redireciona para a lista de eventos.
+        res.redirect('/events');
+
     } catch (error) {
-        // Em caso de erro, retorna uma resposta com status 500.
         res.status(500).json({ error: 'Erro ao salvar o evento', details: error.message });
     }
 }
 
 async function deleteEvent(req, res) {
     try {
-        const event = await Event.findOne({ where: { id: req.body.id } });
-        if (!event) {
-            return res.status(404).json({ message: 'Evento não encontrado.' });
-        }
-        await event.destroy();
-        res.json({ message: 'Registro removido.' });
+        await Event.destroy({ where: { id: req.body.id } });
+        
+        // ALTERAÇÃO: Redireciona para a lista de eventos.
+        res.redirect('/events');
+
     } catch (error) {
         res.status(500).json({ error: 'Erro ao remover evento', details: error.message });
     }

@@ -1,50 +1,114 @@
 <h1>Eventos</h1>
 
-<form action="/events/{{#if action }}save{{else}}create{{/if}}" method="post">
-    <input type="hidden" name="id" value="{{event_editing.id}}">
+<div class="container">
+    <form action="/events/{{#if event_editing}}save{{else}}create{{/if}}" method="post">
+        <input type="hidden" name="id" value="{{event_editing.id}}">
 
-    <label for="name">Nome do Evento</label><br>
-    <input type="text" id="name" name="name" value="{{event_editing.name}}" required><br><br>
+        <div class="mb-3">
+            <label for="name" class="form-label">Nome do Evento</label>
+            <input type="text" id="name" class="form-control" name="name" value="{{event_editing.name}}"
+                required>
+        </div>
 
-    <label for="date">Data</label><br>
-    {{! Usando o input type="date" para melhor experiência do usuário }}
-    <input type="date" id="date" name="date" value="{{event_editing.date}}" required><br><br>
+        <div class="mb-3"><label for="date" class="form-label">Data</label><br>
+            <input type="date" id="date" class="form-control" name="date" value="{{event_editing.date}}"
+                required>
+        </div>
 
-    <label for="local">Local</label><br>
-    <input type="text" id="local" name="local" value="{{event_editing.local}}" required><br><br>
+        <div class="mb-3">
+            <label for="city" class="form-label">Cidade</label><br>
+            <input type="text" id="city" class="form-control" name="city" value="{{event_editing.city}}"
+                required>
+        </div>
 
-    <button type="submit">{{#if action }}Salvar Edição{{else}}Criar Evento{{/if}}</button>
-</form>
+        <div class="mb-3">
+            {{!-- Dropdown para Organizador --}}
+            <label for="OrganizerId">Organizador</label>
+            <select name="OrganizerId" class="form-select form-select-lg mb-3" aria-label="Large select example"
+                id="OrganizerId" required>
+                <option value="">Selecione um organizador...</option>
+                {{#each all_organizers}}
+                <option value="{{this.id}}" {{#if (eq this.id ../event_editing.OrganizerId)}} selected {{/if}}>
+                    {{this.name}}
+                </option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            {{!-- Dropdown para Categoria --}}
+            <label for="CategoryId">Categoria</label>
+            <select name="CategoryId" class="form-select form-select-lg mb-3" aria-label="Large select example"
+                id="CategoryId" required>
+                <option value="">Selecione uma categoria...</option>
+                {{#each all_categories}}
+                <option value="{{this.id}}" {{#if (eq this.id ../event_editing.CategoryId)}} selected {{/if}}>
+                    {{this.name}}
+                </option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="mb-3">
+            {{!-- Checkboxes para Participantes --}}
+            <label>Participantes</label>
+            <div class="form-check">
+                {{#each all_participants}}
+                <input type="checkbox" class="form-check-input" id="participant{{this.id}}" name="participants"
+                    value="{{this.id}}" {{#if (contains ../event_editing.Participants this.id)}} checked {{/if}}>
+                <label class="form-check-label" for="participant{{this.id}}">{{this.name}}</label>
+                {{/each}}
+            </div>
+        </div>
+
+
+        <button class="btn btn-primary" type="submit">{{#if event_editing}}Salvar Edição{{else}}Criar Evento{{/if}}</button>
+    </form>
+</div>
+
 
 <hr>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Data</th>
+                <th>Cidade</th>
+                <th>Organizador</th>
+                <th>Categoria</th>
+                <th>Participantes</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each events}}
+            <tr>
+                <td>{{this.name}}</td>
+                <td>{{this.date}}</td>
+                <td>{{this.city}}</td>
+                <td>{{this.Organizer.name}}</td>
+                <td>{{this.Category.name}}</td>
 
-<table>
-    <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Data</th>
-            <th>Local</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#each events}}
-        <tr>
-            <td>{{this.name}}</td>
-            <td>{{this.date}}</td>
-            <td>{{this.local}}</td>
-            <td style="display: flex; justify-content: space-evenly;">
-                <form action="/events/edit" method="post">
-                    <input type="hidden" name="id" value="{{this.id}}">
-                    <button type="submit">Edit</button>
-                </form>
+                {{! CORREÇÃO: Bloco de participantes agora está dentro de sua própria célula <td> }}
+                <td>
+                    {{#each this.Participants}}
+                    {{this.name}}{{#unless @last}}, {{/unless}}
+                    {{/each}}
+                </td>
 
-                <form action="/events/delete" method="post">
-                    <input type="hidden" name="id" value="{{this.id}}">
-                    <button type="submit">Delete</button>
-                </form>
-            </td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
+                <td style="display: flex; justify-content: space-evenly;">
+                    <form action="/events/edit" method="post">
+                        <input type="hidden" name="id" value="{{this.id}}">
+                        <button type="submit" class="btn btn-light">Edit</button>
+                    </form>
+
+                    <form action="/events/delete" method="post">
+                        <input type="hidden" name="id" value="{{this.id}}">
+                        <button type="submit" class="btn btn-dark">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>

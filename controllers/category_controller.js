@@ -1,4 +1,3 @@
-import { raw } from "mysql2";
 import Category from "../models/category.js";
 import Event from "../models/event.js";
 
@@ -8,7 +7,8 @@ async function createCategory(req, res) {
             name: req.body.name,
             description: req.body.description,
         });
-        res.render('alerts', { title: 'Categorias', body: 'Categoria criada com sucesso.' });
+        // ALTERAÇÃO: Redireciona para a lista de categorias.
+        res.redirect('/categories');
     } catch (error) {
         res.status(500).json({ error: 'Erro ao criar categoria', details: error.message });
     }
@@ -16,8 +16,10 @@ async function createCategory(req, res) {
 
 async function listCategories(req, res) {
     try {
-        const list = await Category.findAll({ include: Event ,raw: true });
-        res.render('categories/category', { categories: list });
+        // Busca a lista de categorias e a processa para JSON.
+        const categoriesRaw = await Category.findAll();
+        const categories = categoriesRaw.map(c => c.toJSON());
+        res.render('categories/category', { categories: categories });
     } catch (error) {
         res.status(500).json({ error: 'Erro ao listar categorias', details: error.message });
     }
@@ -26,9 +28,21 @@ async function listCategories(req, res) {
 async function editCategory(req, res) {
     try {
         const category = await Category.findOne({ where: { id: req.body.id } });
-        res.render('categories/category', { action: 'edit', category_editing: category.dataValues });
+        if (!category) {
+            // ALTERAÇÃO: Redireciona se a categoria não for encontrada.
+            return res.redirect('/categories');
+        }
+
+        // Busca a lista completa para exibir na página junto com o formulário de edição.
+        const categoriesRaw = await Category.findAll();
+        const categories = categoriesRaw.map(c => c.toJSON());
+        
+        res.render('categories/category', { 
+            action: 'edit', // Adiciona o contexto para o formulário saber que está em modo de edição.
+            categories: categories,
+            category_editing: category.toJSON() 
+        });
     } catch (error) {
-        // Tratamento de erro adicionado
         res.status(500).json({ message: "Erro ao carregar dados para edição.", error: error.message });
     }
 }
@@ -39,25 +53,22 @@ async function saveCategory(req, res) {
         category.name = req.body.name;
         category.description = req.body.description;
         await category.save();
-        res.render('alerts', { title: 'Categories', body: 'Category editada.' });
+        // ALTERAÇÃO: Redireciona para a lista de categorias.
+        res.redirect('/categories');
     } catch (error) {
-        // Tratamento de erro adicionado
-        res.status(500).json({ message: "Erro ao salvar a category.", error: error.message });
+        res.status(500).json({ message: "Erro ao salvar a categoria.", error: error.message });
     }
 }
 
 async function deleteCategory(req, res) {
     try {
-        const category = await Category.findOne({ where: { id: req.body.id } });
-        if (!category) {
-            return res.status(404).json({ message: "Categoria não encontrada." });
-        }
-        await category.destroy();
-        res.json({ message: "Registro removido." });
+        // Otimização: Destrói o registro diretamente sem busca prévia.
+        await Category.destroy({ where: { id: req.body.id } });
+        // ALTERAÇÃO: Redireciona para a lista de categorias.
+        res.redirect('/categories');
     } catch (error) {
         res.status(500).json({ message: "Erro ao remover categoria.", error: error.message });
     }
 }
 
-// Exporta as funções, mantendo a estrutura original do seu arquivo.
 export { createCategory, listCategories, editCategory, saveCategory, deleteCategory };

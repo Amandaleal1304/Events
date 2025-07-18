@@ -8,36 +8,44 @@ async function createOrganizer(req, res) {
             contact: req.body.contact,
             email: req.body.email
         });
-        res.render('alerts', { title: 'Organizadores', body: 'Organizador criado.' });
+        // ALTERAÇÃO: Redireciona para a lista de organizadores.
+        res.redirect('/organizers');
     } catch (error) {
         res.status(500).json({ message: "Erro ao criar organizador.", error: error.message });
     }
 }
 
-
 async function listOrganizers(req, res) {
     try {
-        // Inclui o modelo Event para carregar eventos associados, se houver.
-        const list = await Organizer.findAll({ include: Event });
-        res.render('organizes/organize', { organizers: list, raw: true });
+        // Busca a lista de organizadores e a processa para JSON.
+        const organizersRaw = await Organizer.findAll();
+        const organizers = organizersRaw.map(o => o.toJSON());
+        res.render('organizes/organize', { organizers: organizers });
     } catch (error) {
         res.status(500).json({ message: "Erro ao listar organizadores.", error: error.message });
     }
 }
 
-
 async function editOrganizer(req, res) {
     try {
         const organizer = await Organizer.findOne({ where: { id: req.body.id } });
         if (!organizer) {
-            return res.status(404).json({ message: "Organizador não encontrado." });
+            // ALTERAÇÃO: Redireciona se o organizador não for encontrado.
+            return res.redirect('/organizers');
         }
-        res.render('organizes/organize', { action: 'edit', organizer_editing: organizer.dataValues });
+        // Busca a lista completa para o caso da página ter um formulário de criação junto.
+        const organizersRaw = await Organizer.findAll();
+        const organizers = organizersRaw.map(o => o.toJSON());
+
+        res.render('organizes/organize', { 
+            action: 'edit', // CORREÇÃO: Adiciona o contexto para o formulário saber que está em modo de edição.
+            organizers: organizers,
+            organizer_editing: organizer.toJSON() 
+        });
     } catch (error) {
         res.status(500).json({ message: "Erro ao carregar dados para edição.", error: error.message });
     }
 }
-
 
 async function saveOrganizer(req, res) {
     try {
@@ -46,18 +54,19 @@ async function saveOrganizer(req, res) {
         organizer.contact = req.body.contact;
         organizer.email = req.body.email;
         await organizer.save();
-        res.render('alerts', { title: 'Organizadores', body: 'Organizador editado.' });
+        // ALTERAÇÃO: Redireciona para a lista de organizadores.
+        res.redirect('/organizers');
     } catch (error) {
         res.status(500).json({ message: "Erro ao salvar o organizador.", error: error.message });
     }
 }
 
-
 async function deleteOrganizer(req, res) {
     try {
-        const organizer = await Organizer.findOne({ where: { id: req.body.id } });
-        await organizer.destroy();
-        res.render('alerts', { title: 'Organizadores', body: 'Organizador deletado.' });
+        // Otimização: Destrói o registro diretamente sem busca prévia.
+        await Organizer.destroy({ where: { id: req.body.id } });
+        // ALTERAÇÃO: Redireciona para a lista de organizadores.
+        res.redirect('/organizers');
     } catch (error) {
         res.status(500).json({ message: "Erro ao deletar o organizador.", error: error.message });
     }

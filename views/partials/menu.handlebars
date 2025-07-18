@@ -1,31 +1,46 @@
-<nav>
-
-    <ul style="display: flex; justify-content: start; list-style: none;">
-
-        <li><a href="/">Home</a>&nbsp;</li>
-
-        <li><a href="/events">Eventos</a>&nbsp;</li>
-
-        <li><a href="/participants">Participantes</a>&nbsp;</li>
-
-        <li><a href="/organizers">Organizadores</a>&nbsp;</li>
-
-        <li><a href="/categories">Categorias</a>&nbsp;</li>
-
-        {{!-- user é um objeto global, criado no controller login --}}
-
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    
+    {{!-- Nome do seu site, que leva para a Home --}}
+    <a class="navbar-brand" href="/">Eventos</a>
+    
+    {{!-- Botão "Hamburger" que aparece em telas pequenas --}}
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    {{!-- Container que agrupa os links e se torna responsivo --}}
+    <div class="collapse navbar-collapse" id="navbarNav">
+      
+      {{!-- Links principais alinhados à esquerda --}}
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/events">Eventos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/participants">Participantes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/organizers">Organizadores</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/categories">Categorias</a>
+        </li>
+      </ul>
+      
+      {{!-- Links de usuário alinhados à direita --}}
+      <div class="navbar-nav">
         {{#if user}}
-
-        <li><a href="/users/logout">Sair</a>&nbsp;</li>
-
+          <a class="nav-link" href="/users/logout">Sair ({{user.name}})</a>
         {{else}}
-
-        <li><a href="/users/login">Entrar</a>&nbsp;</li>
-
-        <li><a href="/users/register">Registrar</a>&nbsp;</li>
-
+          <a class="nav-link" href="/users/login">Entrar</a>
+          <a class="nav-link" href="/users/register">Registrar</a>
         {{/if}}
+      </div>
 
-    </ul>
-
+    </div>
+  </div>
 </nav>
